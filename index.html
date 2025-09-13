@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Accuity Pricing (Embed)</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: light only; }
+    html, body { margin:0; padding:0; background:#f8f9fa; }
+    body { font-family:'Montserrat',system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial,sans-serif; padding:20px; }
+    .pricing-container { display:flex; flex-direction:column; gap:24px; max-width:800px; margin:0 auto; padding-top:60px; }
+    .pricing-dropdown { background:#fff; border-radius:16px; box-shadow:0 4px 20px rgba(0,0,0,.08); overflow:hidden; transition:transform .3s, box-shadow .3s; cursor:pointer; }
+    .pricing-dropdown:hover { transform:translateY(-4px); box-shadow:0 8px 30px rgba(0,0,0,.15); }
+    .pricing-header { padding:25px 20px; text-align:center; color:#fff; position:relative; }
+    .single-session .pricing-header { background:linear-gradient(135deg,#224f7d,#447fb3); }
+    .four-session   .pricing-header { background:linear-gradient(135deg,#00335f,#1c6eaf); }
+    .six-session    .pricing-header { background:linear-gradient(135deg,#002b5c,#2a95ff); }
+    .pricing-title { font-size:24px; font-weight:800; margin-bottom:8px; }
+    .pricing-price { font-size:28px; font-weight:800; margin-bottom:5px; }
+    .pricing-subtitle { font-size:14px; opacity:.9; }
+    .dropdown-arrow { position:absolute; right:20px; top:50%; transform:translateY(-50%); font-size:20px; transition:transform .3s; }
+    .pricing-dropdown.active .dropdown-arrow { transform:translateY(-50%) rotate(180deg); }
+    .pricing-content { max-height:0; overflow:hidden; transition:max-height .4s; background:#f9f9f9; }
+    .pricing-dropdown.active .pricing-content { max-height:800px; }
+    .content-inner { padding:25px 20px; }
+    .features-title { font-size:18px; font-weight:700; color:#333; margin-bottom:20px; text-align:center; }
+    .feature-item { display:flex; align-items:flex-start; gap:12px; margin-bottom:16px; padding:12px; background:#fff; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,.04); }
+    .feature-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+    .feature-title { font-size:16px; font-weight:600; color:#333; margin-bottom:4px; }
+    .feature-description { font-size:14px; color:#666; line-height:1.4; }
+    .status-icon { width:20px; height:20px; border-radius:4px; position:relative; flex-shrink:0; margin-top:2px; }
+    .status-included { background:linear-gradient(135deg,#0081fb,#26b8ff); }
+    .status-not-included { background:linear-gradient(135deg,#5c6f7a,#9aaab5); }
+    .status-icon svg { position:absolute; top:2px; left:2px; fill:#fff; }
+    .savings-badge { background:linear-gradient(135deg,#ff6b35,#ff8e53); color:#fff; padding:4px 10px; border-radius:12px; font-size:12px; font-weight:600; display:inline-block; margin-top:4px; }
+    @media (max-width:480px){ .pricing-container { gap:16px; } }
+  </style>
+</head>
+<body>
+  <div class="pricing-container">
+    <!-- Single Session -->
+    <div class="pricing-dropdown single-session" onclick="toggleDropdown(this)">
+      <div class="pricing-header">
+        <div class="pricing-title">Single Session</div>
+        <div class="pricing-price">$60 / session</div>
+        <div class="pricing-subtitle">Does not renew</div>
+        <div class="dropdown-arrow">▼</div>
+      </div>
+      <div class="pricing-content">
+        <div class="content-inner">
+          <div class="features-title">What's Included:</div>
+          <div class="feature-item">
+            <div class="feature-icon">👨‍🏫</div>
+            <div class="feature-content">
+              <div class="feature-title">Private Tutoring</div>
+              <div class="feature-description">Book one private tutoring session tailored to your needs. Pick topics, work through tough homework, or prep for a quiz—fast, focused help from a tutor who's taken your exact class.</div>
+            </div>
+            <div class="status-icon status-included"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.206-4.243-4.247a1 1 0 0 0-1.414 1.418l5 5.005a1 1 0 0 0 1.414 0l10-10.01z"/></svg></div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🎥</div>
+            <div class="feature-content">
+              <div class="feature-title">Video Course Access</div>
+              <div class="feature-description">Not included with Single Session. You can subscribe separately for on-demand walkthroughs and practice.</div>
+            </div>
+            <div class="status-icon status-not-included"><svg viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="9" stroke="white" stroke-width="2" fill="none"/><line x1="8" y1="8" x2="16" y2="16" stroke="white" stroke-width="2"/></svg></div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">📄</div>
+            <div class="feature-content">
+              <div class="feature-title">Physical Exam Review Packet</div>
+              <div class="feature-description">Not included with Single Session. Packets are available as part of a course subscription and can be picked up from UCF's on-campus print shop.</div>
+            </div>
+            <div class="status-icon status-not-included"><svg viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="9" stroke="white" stroke-width="2" fill="none"/><line x1="8" y1="8" x2="16" y2="16" stroke="white" stroke-width="2"/></svg></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4-Session Bundle -->
+    <div class="pricing-dropdown four-session" onclick="toggleDropdown(this)">
+      <div class="pricing-header">
+        <div class="pricing-title">4-Session Bundle</div>
+        <div class="pricing-price">$229 / month</div>
+        <div class="pricing-subtitle">Cancel anytime</div>
+        <div class="dropdown-arrow">▼</div>
+      </div>
+      <div class="pricing-content">
+        <div class="content-inner">
+          <div class="features-title">What's Included:</div>
+          <div class="feature-item">
+            <div class="feature-icon">👨‍🏫</div>
+            <div class="feature-content">
+              <div class="feature-title">Private Tutoring</div>
+              <div class="feature-description"><strong>Four total hours of 1-on-1 tutoring</strong> with a tutor who's taken your exact class. Map out a plan, meet weekly or as needed, and build momentum before each exam.</div>
+            </div>
+            <div class="status-icon status-included"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.206-4.243-4.247a1 1 0 0 0-1.414 1.418l5 5.005a1 1 0 0 0 1.414 0l10-10.01z"/></svg></div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🎥</div>
+            <div class="feature-content">
+              <div class="feature-title">Video Course Access</div>
+              <div class="feature-description"><strong>Included while your bundle is active.</strong> Get 24/7 on-demand access to chapter walkthroughs, homework breakdowns, practice, and exam reviews.</div>
+            </div>
+            <div class="status-icon status-included"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.206-4.243-4.247a1 1 0 0 0-1.414 1.418l5 5.005a1 1 0 0 0 1.414 0l10-10.01z"/></svg></div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">📄</div>
+            <div class="feature-content">
+              <div class="feature-title">Physical Exam Review Packet</div>
+              <div class="feature-description"><strong>Included while your bundle is active.</strong> Pick up your printed Exam Review Packet at UCF's The Spot—no shipping, no waiting.</div>
+            </div>
+            <div class="status-icon status-included"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.206-4.243-4.247a1 1 0 0 0-1.414 1.418l5 5.005a1 1 0 0 0 1.414 0l10-10.01z"/></svg></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6-Session Bundle -->
+    <div class="pricing-dropdown six-session" onclick="toggleDropdown(this)">
+      <div class="pricing-header">
+        <div class="pricing-title">6-Session Bundle</div>
+        <div class="pricing-price">$299 / month</div>
+        <div class="pricing-subtitle">Cancel anytime</div>
+        <div class="dropdown-arrow">▼</div>
+      </div>
+      <div class="pricing-content">
+        <div class="content-inner">
+          <div class="features-title">What's Included:</div>
+          <div class="feature-item">
+            <div class="feature-icon">👨‍🏫</div>
+            <div class="feature-content">
+              <div class="feature-title">Private Tutoring</div>
+              <div class="feature-description"><strong>Six total hours of 1-on-1 tutoring</strong> for consistent, exam-ready support. Work with a tutor who knows your exact syllabus and stay on pace each week.</div>
+            </div>
+            <div class="status-icon status-included"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.206-4.243-4.247a1 1 0 0 0-1.414 1.418l5 5.005a1 1 0 0 0 1.414 0l10-10.01z"/></svg></div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🎥</div>
+            <div class="feature-content">
+              <div class="feature-title">Video Course Access</div>
+              <div class="feature-description"><strong>Included while your bundle is active.</strong> Full 24/7 access to our chapter videos, homework walkthroughs, and practice materials.</div>
+            </div>
+            <div class="status-icon status-included"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.206-4.243-4.247a1 1 0 0 0-1.414 1.418l5 5.005a1 1 0 0 0 1.414 0l10-10.01z"/></svg></div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">💠</div>
+            <div class="feature-content">
+              <div class="feature-title">Best Value</div>
+              <div class="feature-description">Lock in our best value—this bundle prices sessions at <strong>17% off the single-session rate.</strong></div>
+              <div class="savings-badge">Save 17%</div>
+            </div>
+            <div class="status-icon status-included"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.206-4.243-4.247a1 1 0 0 0-1.414 1.418l5 5.005a1 1 0 0 0 1.414 0l10-10.01z"/></svg></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleDropdown(el){
+      document.querySelectorAll('.pricing-dropdown').forEach(d => { if(d!==el) d.classList.remove('active'); });
+      el.classList.toggle('active');
+    }
+  </script>
+</body>
+</html>
