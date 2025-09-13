@@ -1,444 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Pricing Dropdowns</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Montserrat', sans-serif;
-            background: #f8f9fa;
-            padding: 20px;
-        }
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Accuity Pricing (Embed)</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { color-scheme: light only; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background: #f8f9fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, sans-serif;
+    }
 
-        .pricing-container {
-            display: flex;
-            gap: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-            flex-wrap: wrap;
-        }
+    .pricing-container {
+      width: 100%;
+      max-width: 1200px;
+      padding: 40px 20px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
 
-        .pricing-dropdown {
-            flex: 1;
-            min-width: 300px;
-            background: white;
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
-            overflow: hidden;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
+    .pricing-dropdown {
+      background:#fff;
+      border-radius:16px;
+      box-shadow:0 4px 20px rgba(0,0,0,.08);
+      overflow:hidden;
+      transition:transform .3s, box-shadow .3s;
+      cursor:pointer;
+    }
+    .pricing-dropdown:hover {
+      transform:translateY(-4px);
+      box-shadow:0 8px 30px rgba(0,0,0,.15);
+    }
 
-        .pricing-dropdown:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-        }
+    .pricing-header {
+      padding:25px 20px;
+      text-align:center;
+      color:#fff;
+      position:relative;
+    }
+    .single-session .pricing-header { background:linear-gradient(135deg,#224f7d,#447fb3); }
+    .four-session   .pricing-header { background:linear-gradient(135deg,#00335f,#1c6eaf); }
+    .six-session    .pricing-header { background:linear-gradient(135deg,#002b5c,#2a95ff); }
 
-        .pricing-header {
-            padding: 25px 20px;
-            text-align: center;
-            color: white;
-            position: relative;
-            transition: all 0.3s ease;
-        }
+    .pricing-title { font-size:24px; font-weight:800; margin-bottom:8px; }
+    .pricing-price { font-size:28px; font-weight:800; margin-bottom:5px; }
+    .pricing-subtitle { font-size:14px; opacity:.9; }
 
-        .single-session .pricing-header {
-            background: linear-gradient(135deg, #224f7d, #447fb3);
-        }
+    .dropdown-arrow {
+      position:absolute;
+      right:20px;
+      top:50%;
+      transform:translateY(-50%);
+      font-size:20px;
+      transition:transform .3s;
+    }
+    .pricing-dropdown.active .dropdown-arrow { transform:translateY(-50%) rotate(180deg); }
 
-        .four-session .pricing-header {
-            background: linear-gradient(135deg, #00335f, #1c6eaf);
-        }
+    .pricing-content {
+      max-height:0;
+      overflow:hidden;
+      transition:max-height .4s;
+      background:#f9f9f9;
+    }
+    .pricing-dropdown.active .pricing-content { max-height:1000px; }
 
-        .six-session .pricing-header {
-            background: linear-gradient(135deg, #002b5c, #2a95ff);
-        }
+    .content-inner { padding:25px 20px; }
+    .features-title { font-size:18px; font-weight:700; color:#333; margin-bottom:20px; text-align:center; }
 
-        .pricing-title {
-            font-size: 24px;
-            font-weight: 800;
-            margin-bottom: 8px;
-        }
+    .feature-item {
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:16px;
+      padding:12px;
+      background:#fff;
+      border-radius:10px;
+      box-shadow:0 2px 8px rgba(0,0,0,.04);
+    }
+    .feature-icon { font-size:20px; flex-shrink:0; margin-top:2px; }
+    .feature-title { font-size:16px; font-weight:600; color:#333; margin-bottom:4px; }
+    .feature-description { font-size:14px; color:#666; line-height:1.4; }
 
-        .pricing-price {
-            font-size: 28px;
-            font-weight: 800;
-            margin-bottom: 5px;
-        }
+    .status-icon {
+      width:20px; height:20px; border-radius:4px; position:relative;
+      flex-shrink:0; margin-top:2px;
+    }
+    .status-included { background:linear-gradient(135deg,#0081fb,#26b8ff); }
+    .status-not-included { background:linear-gradient(135deg,#5c6f7a,#9aaab5); }
+    .status-icon svg { position:absolute; top:2px; left:2px; fill:#fff; }
 
-        .pricing-subtitle {
-            font-size: 14px;
-            opacity: 0.9;
-        }
+    .savings-badge {
+      background:linear-gradient(135deg,#ff6b35,#ff8e53);
+      color:#fff;
+      padding:4px 10px;
+      border-radius:12px;
+      font-size:12px;
+      font-weight:600;
+      display:inline-block;
+      margin-top:4px;
+    }
 
-        .dropdown-arrow {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 20px;
-            transition: transform 0.3s ease;
-        }
+    /* Enroll button */
+    .enroll-btn {
+      display: inline-block;
+      margin: 25px auto 10px auto;
+      padding: 14px 28px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, #0081fb, #26b8ff);
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all .3s ease;
+      text-decoration: none;
+      text-align: center;
+    }
+    .enroll-btn:hover {
+      background: linear-gradient(135deg, #006edc, #1aa6e8);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
 
-        .pricing-dropdown.active .dropdown-arrow {
-            transform: translateY(-50%) rotate(180deg);
-        }
-
-        .pricing-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease;
-            background: #f9f9f9;
-        }
-
-        .pricing-dropdown.active .pricing-content {
-            max-height: 800px;
-        }
-
-        .content-inner {
-            padding: 25px 20px;
-        }
-
-        .features-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .feature-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 16px;
-            padding: 12px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-        }
-
-        .feature-icon {
-            font-size: 20px;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .feature-content {
-            flex: 1;
-        }
-
-        .feature-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 4px;
-        }
-
-        .feature-description {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.4;
-        }
-
-        .status-icon {
-            width: 20px;
-            height: 20px;
-            border-radius: 4px;
-            flex-shrink: 0;
-            margin-top: 2px;
-            position: relative;
-        }
-
-        .status-included {
-            background: linear-gradient(135deg, #0081fb, #26b8ff);
-        }
-
-        .status-not-included {
-            background: linear-gradient(135deg, #5c6f7a, #9aaab5);
-        }
-
-        .status-icon svg {
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            fill: white;
-        }
-
-        .cta-button {
-            display: block;
-            background: linear-gradient(135deg, #003e7e, #1d7edc);
-            color: white;
-            text-decoration: none;
-            font-weight: 700;
-            font-size: 16px;
-            padding: 14px 24px;
-            border-radius: 25px;
-            text-align: center;
-            margin-top: 20px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 129, 251, 0.3);
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 129, 251, 0.4);
-        }
-
-        .savings-badge {
-            background: linear-gradient(135deg, #ff6b35, #ff8e53);
-            color: white;
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            display: inline-block;
-            margin-top: 4px;
-        }
-
-        @media (max-width: 768px) {
-            .pricing-container {
-                gap: 12px;
-            }
-            
-            .pricing-title {
-                font-size: 24px;
-            }
-            
-            .pricing-price {
-                font-size: 28px;
-            }
-            
-            .pricing-subtitle {
-                font-size: 14px;
-            }
-            
-            .dropdown-arrow {
-                right: 20px;
-                font-size: 20px;
-            }
-        }
-    </style>
+    @media (max-width:480px) {
+      .pricing-container { gap:16px; }
+    }
+  </style>
 </head>
 <body>
-    <div class="pricing-container">
-        
-        <!-- Single Session Dropdown -->
-        <div class="pricing-dropdown single-session" onclick="toggleDropdown(this)">
-            <div class="pricing-header">
-                <div class="pricing-title">Single Session</div>
-                <div class="pricing-price">$60 / session</div>
-                <div class="pricing-subtitle">Does not renew</div>
-                <div class="dropdown-arrow">▼</div>
+  <div class="pricing-container">
+    <!-- Single Session -->
+    <div class="pricing-dropdown single-session" onclick="toggleDropdown(this)">
+      <div class="pricing-header">
+        <div class="pricing-title">Single Session</div>
+        <div class="pricing-price">$60 / session</div>
+        <div class="pricing-subtitle">Does not renew</div>
+        <div class="dropdown-arrow">▼</div>
+      </div>
+      <div class="pricing-content">
+        <div class="content-inner">
+          <div class="features-title">What's Included:</div>
+          <!-- Features -->
+          <div class="feature-item">
+            <div class="feature-icon">👨‍🏫</div>
+            <div class="feature-content">
+              <div class="feature-title">Private Tutoring</div>
+              <div class="feature-description">Book one private tutoring session tailored to your needs...</div>
             </div>
-            <div class="pricing-content">
-                <div class="content-inner">
-                    <div class="features-title">What's Included:</div>
-                    
-                    <div class="feature-item">
-                        <div class="feature-icon">👨‍🏫</div>
-                        <div class="feature-content">
-                            <div class="feature-title">Private Tutoring</div>
-                            <div class="feature-description">Book one private tutoring session tailored to your needs. Pick topics, work through tough homework, or prep for a quiz—fast, focused help from a tutor who's taken your exact class.</div>
-                        </div>
-                        <div class="status-icon status-included">
-                            <svg viewBox="0 0 24 24" width="16" height="16">
-                                <path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.206-4.243-4.247a1 1 0 0 0-1.414 1.418l5 5.005a1 1 0 0 0 1.414 0l10-10.01z"/>
-                            </svg>
-                        </div>
-                    </div>
-                    
-                    <div class="feature-item">
-                        <div class="feature-icon">🎥</div>
-                        <div class="feature-content">
-                            <div class="feature-title">Video Course Access</div>
-                            <div class="feature-description">Not included with Single Session. You can subscribe separately for on-demand walkthroughs and practice.</div>
-                        </div>
-                        <div class="status-icon status-not-included">
-                            <svg viewBox="0 0 24 24" width="16" height="16">
-                                <circle cx="12" cy="12" r="9" stroke="white" stroke-width="2" fill="none"/>
-                                <line x1="8" y1="8" x2="16" y2="16" stroke="white" stroke-width="2"/>
-                            </svg>
-                        </div>
-                    </div>
-                    
-                    <div class="feature-item">
-                        <div class="feature-icon">📄</div>
-                        <div class="feature-content">
-                            <div class="feature-title">Physical Exam Review Packet</div>
-                            <div class="feature-description">Not included with Single Session. Packets are available as part of a course subscription and can be picked up from UCF's on-campus print shop.</div>
-                        </div>
-                        <div class="status-icon status-not-included">
-                            <svg viewBox="0 0 24 24" width="16" height="16">
-                                <circle cx="12" cy="12" r="9" stroke="white" stroke-width="2" fill="none"/>
-                                <line x1="8" y1="8" x2="16" y2="16" stroke="white" stroke-width="2"/>
-                            </svg>
-                        </div>
-                    </div>
-                    
-                    <a href="https://www.accuitytutors.com/acg-2021-tutoring-single-session" target="_blank" class="cta-button">Sign Up Today!</a>
-                </div>
+            <div class="status-icon status-included"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.206-4.243-4.247a1 1 0 0 0-1.414 1.418l5 5.005a1 1 0 0 0 1.414 0l10-10.01z"/></svg></div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon">🎥</div>
+            <div class="feature-content">
+              <div class="feature-title">Video Course Access</div>
+              <div class="feature-description">Not included with Single Session.</div>
             </div>
+            <div class="status-icon status-not-included"><svg viewBox="0 0 24 24" width="16" height="16"><circle cx="12" cy="12" r="9" stroke="white" stroke-width="2" fill="none"/><line x1="8" y1="8" x2="16" y2="16" stroke="white" stroke-width="2"/></svg></div>
+          </div>
+          <!-- Enroll button -->
+          <a href="https://accuitytutors.com/enroll-single" target="_blank" class="enroll-btn">Enroll Now</a>
         </div>
-
-        <!-- 4-Session Bundle Dropdown -->
-        <div class="pricing-dropdown four-session" onclick="toggleDropdown(this)">
-            <div class="pricing-header">
-                <div class="pricing-title">4-Session Bundle</div>
-                <div class="pricing-price">$229 / month</div>
-                <div class="pricing-subtitle">Cancel anytime</div>
-                <div class="dropdown-arrow">▼</div>
-            </div>
-            <div class="pricing-content">
-                <div class="content-inner">
-                    <div class="features-title">What's Included:</div>
-                    
-                    <div class="feature-item">
-                        <div class="feature-icon">👨‍🏫</div>
-                        <div class="feature-content">
-                            <div class="feature-title">Private Tutoring</div>
-                            <div class="feature-description"><strong>Four total hours of 1-on-1 tutoring</strong> with a tutor who's taken your exact class. Map out a plan, meet weekly or as needed, and build momentum before each exam.</div>
-                        </div>
-                        <div class="status-icon status-included">
-                            <svg viewBox="0 0 24 24" width="16" height="16">
-                                <path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.206-4.243-4.247a1 1 0 0 0-1.414 1.418l5 5.005a1 1 0 0 0 1.414 0l10-10.01z"/>
-                            </svg>
-                        </div>
-                    </div>
-                    
-                    <div class="feature-item">
-                        <div class="feature-icon">🎥</div>
-                        <div class="feature-content">
-                            <div class="feature-title">Video Course Access</div>
-                            <div class="feature-description"><strong>Included while your bundle is active.</strong> Get 24/7 on-demand access to chapter walkthroughs, homework breakdowns, practice, and exam reviews.</div>
-                        </div>
-                        <div class="status-icon status-included">
-                            <svg viewBox="0 0 24 24" width="16" height="16">
-                                <path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.206-4.243-4.247a1 1 0 0 0-1.414 1.418l5 5.005a1 1 0 0 0 1.414 0l10-10.01z"/>
-                            </svg>
-                        </div>
-                    </div>
-                    
-                    <div class="feature-item">
-                        <div class="feature-icon">📄</div>
-                        <div class="feature-content">
-                            <div class="feature-title">Physical Exam Review Packet</div>
-                            <div class="feature-description"><strong>Included while your bundle is active.</strong> Pick up your printed Exam Review Packet at UCF's The Spot—no shipping, no waiting.</div>
-                        </div>
-                        <div class="status-icon status-included">
-                            <svg viewBox="0 0 24 24" width="16" height="16">
-                                <path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.206-4.243-4.247a1 1 0 0 0-1.414 1.418l5 5.005a1 1 0 0 0 1.414 0l10-10.01z"/>
-                            </svg>
-                        </div>
-                    </div>
-                    
-                    <a href="https://www.accuitytutors.com/payment?product_id=acg-2021-tutoring-4-sessions-fall-2025&type=subscription" target="_blank" class="cta-button">Sign Up Today!</a>
-                </div>
-            </div>
-        </div>
-
-        <!-- 6-Session Bundle Dropdown -->
-        <div class="pricing-dropdown six-session" onclick="toggleDropdown(this)">
-            <div class="pricing-header">
-                <div class="pricing-title">6-Session Bundle</div>
-                <div class="pricing-price">$299 / month</div>
-                <div class="pricing-subtitle">Cancel anytime</div>
-                <div class="dropdown-arrow">▼</div>
-            </div>
-            <div class="pricing-content">
-                <div class="content-inner">
-                    <div class="features-title">What's Included:</div>
-                    
-                    <div class="feature-item">
-                        <div class="feature-icon">👨‍🏫</div>
-                        <div class="feature-content">
-                            <div class="feature-title">Private Tutoring</div>
-                            <div class="feature-description"><strong>Six total hours of 1-on-1 tutoring</strong> for consistent, exam-ready support. Work with a tutor who knows your exact syllabus and stay on pace each week.</div>
-                        </div>
-                        <div class="status-icon status-included">
-                            <svg viewBox="0 0 24 24" width="16" height="16">
-                                <path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.206-4.243-4.247a1 1 0 0 0-1.414 1.418l5 5.005a1 1 0 0 0 1.414 0l10-10.01z"/>
-                            </svg>
-                        </div>
-                    </div>
-                    
-                    <div class="feature-item">
-                        <div class="feature-icon">🎥</div>
-                        <div class="feature-content">
-                            <div class="feature-title">Video Course Access</div>
-                            <div class="feature-description"><strong>Included while your bundle is active.</strong> Full 24/7 access to our chapter videos, homework walkthroughs, and practice materials.</div>
-                        </div>
-                        <div class="status-icon status-included">
-                            <svg viewBox="0 0 24 24" width="16" height="16">
-                                <path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.206-4.243-4.247a1 1 0 0 0-1.414 1.418l5 5.005a1 1 0 0 0 1.414 0l10-10.01z"/>
-                            </svg>
-                        </div>
-                    </div>
-                    
-                    <div class="feature-item">
-                        <div class="feature-icon">📄</div>
-                        <div class="feature-content">
-                            <div class="feature-title">Physical Exam Review Packet</div>
-                            <div class="feature-description"><strong>Included while your bundle is active.</strong> Grab your printed Exam Review Packet at The Spot on campus—prep faster with targeted problems and solutions.</div>
-                        </div>
-                        <div class="status-icon status-included">
-                            <svg viewBox="0 0 24 24" width="16" height="16">
-                                <path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.206-4.243-4.247a1 1 0 0 0-1.414 1.418l5 5.005a1 1 0 0 0 1.414 0l10-10.01z"/>
-                            </svg>
-                        </div>
-                    </div>
-                    
-                    <div class="feature-item">
-                        <div class="feature-icon">💠</div>
-                        <div class="feature-content">
-                            <div class="feature-title">Best Value</div>
-                            <div class="feature-description">Lock in our best value—this bundle prices sessions at <strong>17% off the single-session rate.</strong> Ideal for weekly support through an entire exam cycle.</div>
-                            <div class="savings-badge">Save 17%</div>
-                        </div>
-                        <div class="status-icon status-included">
-                            <svg viewBox="0 0 24 24" width="16" height="16">
-                                <path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.206-4.243-4.247a1 1 0 0 0-1.414 1.418l5 5.005a1 1 0 0 0 1.414 0l10-10.01z"/>
-                            </svg>
-                        </div>
-                    </div>
-                    
-                    <a href="https://www.accuitytutors.com/payment?product_id=acg-2021-tutoring-6-sessions-fall-2025&type=subscription" target="_blank" class="cta-button">Sign Up Today!</a>
-                </div>
-            </div>
-        </div>
-
+      </div>
     </div>
 
-    <script>
-        function toggleDropdown(element) {
-            // Close all other dropdowns
-            document.querySelectorAll('.pricing-dropdown').forEach(dropdown => {
-                if (dropdown !== element) {
-                    dropdown.classList.remove('active');
-                }
-            });
-            
-            // Toggle the clicked dropdown
-            element.classList.toggle('active');
-        }
+    <!-- 4-Session Bundle -->
+    <div class="pricing-dropdown four-session" onclick="toggleDropdown(this)">
+      <div class="pricing-header">
+        <div class="pricing-title">4-Session Bundle</div>
+        <div class="pricing-price">$229 / month</div>
+        <div class="pricing-subtitle">Cancel anytime</div>
+        <div class="dropdown-arrow">▼</div>
+      </div>
+      <div class="pricing-content">
+        <div class="content-inner">
+          <div class="features-title">What's Included:</div>
+          <!-- Features -->
+          <div class="feature-item">
+            <div class="feature-icon">👨‍🏫</div>
+            <div class="feature-content">
+              <div class="feature-title">Private Tutoring</div>
+              <div class="feature-description"><strong>Four total hours of 1-on-1 tutoring</strong>...</div>
+            </div>
+            <div class="status-icon status-included"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.206-4.243-4.247a1 1 0 0 0-1.414 1.418l5 5.005a1 1 0 0 0 1.414 0l10-10.01z"/></svg></div>
+          </div>
+          <!-- Enroll button -->
+          <a href="https://accuitytutors.com/enroll-4bundle" target="_blank" class="enroll-btn">Enroll Now</a>
+        </div>
+      </div>
+    </div>
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            if (!event.target.closest('.pricing-dropdown')) {
-                document.querySelectorAll('.pricing-dropdown').forEach(dropdown => {
-                    dropdown.classList.remove('active');
-                });
-            }
-        });
-    </script>
+    <!-- 6-Session Bundle -->
+    <div class="pricing-dropdown six-session" onclick="toggleDropdown(this)">
+      <div class="pricing-header">
+        <div class="pricing-title">6-Session Bundle</div>
+        <div class="pricing-price">$299 / month</div>
+        <div class="pricing-subtitle">Cancel anytime</div>
+        <div class="dropdown-arrow">▼</div>
+      </div>
+      <div class="pricing-content">
+        <div class="content-inner">
+          <div class="features-title">What's Included:</div>
+          <!-- Features -->
+          <div class="feature-item">
+            <div class="feature-icon">👨‍🏫</div>
+            <div class="feature-content">
+              <div class="feature-title">Private Tutoring</div>
+              <div class="feature-description"><strong>Six total hours of 1-on-1 tutoring</strong>...</div>
+            </div>
+            <div class="status-icon status-included"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M20.285 6.709a1 1 0 0 0-1.414-1.418l-9.192 9.206-4.243-4.247a1 1 0 0 0-1.414 1.418l5 5.005a1 1 0 0 0 1.414 0l10-10.01z"/></svg></div>
+          </div>
+          <!-- Enroll button -->
+          <a href="https://accuitytutors.com/enroll-6bundle" target="_blank" class="enroll-btn">Enroll Now</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleDropdown(el){
+      document.querySelectorAll('.pricing-dropdown').forEach(d => { if(d!==el) d.classList.remove('active'); });
+      el.classList.toggle('active');
+    }
+  </script>
 </body>
 </html>
